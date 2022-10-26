@@ -208,9 +208,14 @@ const create_backup = async (fnm?: string): Promise<string> => {
   const zipFileName = fnm || `sc-backup-${tens}-${day}.zip`;
 
   var zip = new Zip();
+  console.log("zip addLocalFolder", tmpDir.path);
   zip.addLocalFolder(tmpDir.path);
+  console.log("writeZip", zipFileName);
   zip.writeZip(zipFileName);
+  console.log("cleanup tempdir");
   await tmpDir.cleanup();
+  console.log("cleanup done");
+
   return zipFileName;
 };
 
@@ -416,6 +421,7 @@ const delete_old_backups = async () => {
 };
 
 const auto_backup_now = async () => {
+  console.log("enter auto_backup_now");
   const fileName = await create_backup();
   console.log("auto_backup_filename", fileName);
 
