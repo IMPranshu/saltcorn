@@ -213,7 +213,11 @@ const create_backup = async (fnm?: string): Promise<string> => {
   console.log("writeZip", zipFileName);
   zip.writeZip(zipFileName);
   console.log("cleanup tempdir");
-  await tmpDir.cleanup();
+  try {
+    await tmpDir.cleanup();
+  } catch (e) {
+    console.log("cleanup error: ", e);
+  }
   console.log("cleanup done");
 
   return zipFileName;
