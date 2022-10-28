@@ -19,6 +19,8 @@ import {
   readdir,
   stat,
 } from "fs/promises";
+import { removeSync } from "fs-extra";
+
 import { existsSync, fstat, readdirSync, statSync } from "fs";
 import { join, basename } from "path";
 import dateFormat from "dateformat";
@@ -214,7 +216,8 @@ const create_backup = async (fnm?: string): Promise<string> => {
   zip.writeZip(zipFileName);
   console.log("cleanup tempdir");
   try {
-    await tmpDir.cleanup();
+    //await tmpDir.cleanup();
+    removeSync(tmpDir.path);
   } catch (e) {
     console.log("cleanup error: ", e);
   }
