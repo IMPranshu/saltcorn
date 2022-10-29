@@ -208,6 +208,7 @@ const runScheduler = async ({
         console.log("running auto_backup_now");
 
         await auto_backup_now();
+        console.log("exit auto_backup_now");
       }
     } catch (e) {
       console.error(`scheduler error backup: `, e);
@@ -222,6 +223,7 @@ const runScheduler = async ({
     i += 1;
     await sleepUntil(firstrun, tickSeconds * i);
     await run();
+    console.log("while done");
   }
 };
 

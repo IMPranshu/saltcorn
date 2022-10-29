@@ -455,7 +455,11 @@ const auto_backup_now = async () => {
       const directory = getState().getConfig("auto_backup_directory");
       console.log("auto_backup_directory", directory, fileName);
       await copyFile(fileName, join(directory, fileName));
+      console.log("unlink file");
+
       await unlink(fileName);
+      console.log("delete_old_backups");
+
       await delete_old_backups();
       break;
 
@@ -463,6 +467,7 @@ const auto_backup_now = async () => {
       throw new Error("Unknown destination: " + destination);
       break;
   }
+  console.log("auto_backup_now done");
 };
 
 export = {
