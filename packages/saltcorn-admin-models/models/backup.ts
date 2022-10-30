@@ -19,7 +19,7 @@ import {
   readdir,
   stat,
 } from "fs/promises";
-import { removeSync } from "fs-extra";
+import fsx from "fs-extra";
 
 import { existsSync, fstat, readdirSync, statSync } from "fs";
 import { join, basename } from "path";
@@ -217,7 +217,7 @@ const create_backup = async (fnm?: string): Promise<string> => {
   console.log("cleanup tempdir");
   try {
     //await tmpDir.cleanup();
-    removeSync(tmpDir.path);
+    await fsx.remove(tmpDir.path);
   } catch (e) {
     console.log("cleanup error: ", e);
   }
@@ -423,7 +423,7 @@ const delete_old_backups = async () => {
     const stats = await stat(path.join(directory, file));
     const ageDays =
       (new Date().getTime() - stats.birthtime.getTime()) / (1000 * 3600 * 24);
-    if (ageDays > expire_days) await unlink(path.join(directory, file));
+    if (ageDays > expire_days) await fsx.remove(path.join(directory, file));
   }
 };
 
@@ -454,10 +454,10 @@ const auto_backup_now = async () => {
     case "Local directory":
       const directory = getState().getConfig("auto_backup_directory");
       console.log("auto_backup_directory", directory, fileName);
-      await copyFile(fileName, join(directory, fileName));
+      await fsx.copy(fileName, join(directory, fileName));
       console.log("unlink file");
 
-      await unlink(fileName);
+      await fsx.remove(fileName);
       console.log("delete_old_backups");
 
       await delete_old_backups();
